@@ -16,8 +16,8 @@ float Ki = 0;
 #define setPoint 100.0
 
 static float PIDcal(float setpoint,float actual_position);
-static float mcuActuatorPIDdac(float target, float actual);
-static float takeStep(const float dac);
+static uint32_t mcuActuatorPIDdacDelta(float target, float actual);
+static float takeStep(const uint32_t dac);
 
 
 #define mcu_pid_epsilon 0.01
@@ -48,14 +48,16 @@ int main(int argc, const char * argv[]) {
         printf("Adjust# = %d, control = %f, position = %f\n", adjustCnt, control, position);
     }
  */
-    float current_dac = 65535.00/2.00;          // Initial value. Mid point of 16 bit dac.
-    float actual_step = takeStep(current_dac);  // Actual journey taken with initial dac value.
-    float delta_dac = 0;
+    uint32_t current_dac = (uint32_t) (65535.00/2.00);  // Initial value. Mid point of 16 bit dac.
+    float actual_step = takeStep(current_dac);          // Actual journey taken with initial dac value.
+    uint32_t delta_dac = 0;
     int adjustCnt = 0;
-    
+
+    printf("Initial values of: actual_step = %f, current_dac = %d\n", actual_step, current_dac);
+
     while (fabs(actual_step - mcu_pid_setPoint) > 0) {
 //        while (1) {
-        delta_dac = mcuActuatorPIDdac(mcu_pid_setPoint, actual_step);
+        delta_dac = mcuActuatorPIDdacDelta(mcu_pid_setPoint, actual_step);
         current_dac = current_dac - delta_dac;
 
         if (current_dac > MCU_DAC_MAX)
@@ -68,14 +70,14 @@ int main(int argc, const char * argv[]) {
         
         // Take a step
         adjustCnt++;
-        printf("Adjust# = %d, delta_dac = %f, actual_step = %f, current_dac = %f\n", adjustCnt, delta_dac, actual_step, current_dac);
+        printf("Adjust# = %d, delta_dac = %d, actual_step = %f, current_dac = %d\n", adjustCnt, delta_dac, actual_step, current_dac);
     }
 
     
     return 0;
 }
 
-float mcuActuatorPIDdac(float target, float actual)
+uint32_t mcuActuatorPIDdacDelta(float target, float actual)
 {
     static float pre_error = 0;
     static float integral = 0;
@@ -108,13 +110,13 @@ float mcuActuatorPIDdac(float target, float actual)
     //Update error
     pre_error = error;
     
-    return output;
+    return (uint32_t)output;
 }
 
-float takeStep(const float dac)
+float takeStep(const uint32_t dac)
 {
     float retval;
-    retval = (MCU_DAC_MAX-dac)/10; // Imagine that 10 DAC points == 1 nm
+    retval = (float)(MCU_DAC_MAX-dac)/10.0; // Imagine that 10 DAC points == 1 nm
     return retval;
 }
 
