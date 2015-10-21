@@ -23,7 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		DE2E9DD61BD751F700E897C6 /* PID_sample */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PID_sample; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE2E9DD61BD751F700E897C6 /* PID_sample */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; path = PID_sample; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE2E9DD91BD751F700E897C6 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
