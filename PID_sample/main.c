@@ -72,7 +72,6 @@ int main(int argc, const char * argv[]) {
         adjustCnt++;
         printf("Adjust# = %d, delta_dac = %d, actual_step = %f, current_dac = %d\n", adjustCnt, delta_dac, actual_step, current_dac);
     }
-
     
     return 0;
 }
